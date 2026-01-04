@@ -96,6 +96,7 @@
       height: 90%;
       border: none;
       border-radius: 10px;
+      box-shadow: 0 0 20px rgba(66, 227, 245, 0.3);
     }
     .nav-buttons {
       position: absolute;
@@ -129,6 +130,17 @@
       background: rgba(0,0,0,0.7);
       padding: 5px 15px;
       border-radius: 15px;
+      font-weight: bold;
+    }
+    .video-title {
+      position: absolute;
+      top: 70px;
+      background: rgba(0,0,0,0.7);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      max-width: 80%;
+      text-align: center;
     }
   </style>
 </head>
@@ -149,8 +161,9 @@
   </div>
   
   <div class="shorts-container">
+    <!-- FIXED: Initial video loaded directly -->
     <iframe id="short-video" 
-            src="" 
+            src="https://www.youtube.com/embed/QG191wmxCY?autoplay=1&mute=0&controls=0&rel=0&fs=0&modestbranding=1&playsinline=1"
             allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen
             frameborder="0">
@@ -158,6 +171,7 @@
   </div>
   
   <div class="counter" id="counter">1 / 27</div>
+  <div class="video-title" id="video-title">Romantic Reel #1</div>
   
   <div class="nav-buttons">
     <button id="prev" class="nav-btn" onclick="changeVideo(-1)">⏮ Previous</button>
@@ -165,7 +179,7 @@
   </div>
   
   <!-- Welcome Popup -->
-  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; text-align: center; color: white;">
+  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 2000; justify-content: center; align-items: center; text-align: center; color: white;">
     <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 2px solid #42e3f5;">
       <h2 style="color: #42e3f5; margin-bottom: 20px;">🎬 Welcome to GMD Vibes! 🎬</h2>
       <p style="font-size: 18px; margin-bottom: 10px;">❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
