@@ -10,7 +10,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
   <title>GMD Vibes - Romantic Reels & Shayari</title>
   <meta name="description" content="Explore romantic YouTube Shorts, love shayari, reels, and relationship stories. Discover unique gifts and heart-melting content at GMD Vibes.">
-  <meta name="keywords" content="Love Reels, Romantic Shorts, Shayari Videos, YouTube Shorts, GMD Vibes, Romantic Gifts, Trending Reels, Breakup Shayari, Love Stories, Crush Reels, Romantic status, viral love videos, relationship content, gift shop India">
   <meta name="robots" content="index, follow">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -126,32 +125,23 @@
       position: absolute;
       bottom: 130px;
       color: #42e3f5;
-      font-size: 14px;
+      font-size: 16px;
       background: rgba(0,0,0,0.7);
-      padding: 5px 15px;
-      border-radius: 15px;
-      font-weight: bold;
-    }
-    .video-title {
-      position: absolute;
-      top: 70px;
-      background: rgba(0,0,0,0.7);
-      padding: 8px 15px;
+      padding: 8px 20px;
       border-radius: 20px;
-      font-size: 14px;
-      max-width: 80%;
-      text-align: center;
+      font-weight: bold;
+      border: 2px solid #42e3f5;
     }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="logo">GMD Vibes ❤️</div>
-    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="menu-icon" id="menu-icon">☰</div>
   </div>
   
   <div class="navbar" id="navbar">
-    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <button class="close-btn" id="close-btn">&times;</button>
     <a href="#" class="nav-link">Home</a>
     <a href="img.htm" class="nav-link">Art</a>
     <a href="#" class="nav-link">Love Stories❌️</a>
@@ -161,21 +151,19 @@
   </div>
   
   <div class="shorts-container">
-    <!-- FIXED: Initial video loaded directly -->
+    <!-- Video will be loaded here by JavaScript -->
     <iframe id="short-video" 
-            src="https://www.youtube.com/embed/QG191wmxCY?autoplay=1&mute=0&controls=0&rel=0&fs=0&modestbranding=1&playsinline=1"
             allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen
             frameborder="0">
     </iframe>
   </div>
   
-  <div class="counter" id="counter">1 / 27</div>
-  <div class="video-title" id="video-title">Romantic Reel #1</div>
+  <div class="counter" id="counter">Loading...</div>
   
   <div class="nav-buttons">
-    <button id="prev" class="nav-btn" onclick="changeVideo(-1)">⏮ Previous</button>
-    <button id="next" class="nav-btn" onclick="changeVideo(1)">Next ⏭</button>
+    <button id="prev-btn" class="nav-btn">⏮ Previous</button>
+    <button id="next-btn" class="nav-btn">Next ⏭</button>
   </div>
   
   <!-- Welcome Popup -->
@@ -185,7 +173,7 @@
       <p style="font-size: 18px; margin-bottom: 10px;">❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
       <p style="margin-bottom: 25px; color: #ccc;">Press "Continue" to start our journey with Romantic Reels & Shayari</p>
       <div style="display: flex; gap: 15px; justify-content: center;">
-        <button onclick="closePopup()" style="padding: 12px 30px; background: linear-gradient(45deg, #ff5722, #ff9800); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);">🚀 Continue</button>  
+        <button id="continue-btn" style="padding: 12px 30px; background: linear-gradient(45deg, #ff5722, #ff9800); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);">🚀 Continue</button>  
         <button style="padding: 12px 30px; background: linear-gradient(45deg, #2196F3, #21CBF3); border: none; border-radius: 25px; cursor: pointer;">  
           <a href="https://t.me/gmd_gaurav" target="_blank" style="color: white; text-decoration: none; font-size: 16px; font-weight: bold;">📱 Telegram</a>  
         </button>  
@@ -193,7 +181,188 @@
       <p style="margin-top: 20px; font-size: 12px; color: #888;">Use ← → buttons or arrow keys to navigate</p>
     </div>  
   </div>
-  
-  <script src="js/main.js"></script>
+
+  <script>
+    // ================================
+    // ALL JAVASCRIPT CODE IS HERE
+    // ================================
+    
+    // Your YouTube Shorts IDs
+    const youtubeShorts = [
+      "QG191wmxCY",    // Video 1
+      "EW5d777C2s",    // Video 2
+      "FDH17QCvY",     // Video 3
+      "tra1BGMwh5s",   // Video 4
+      "ZTJRfZrFWl",    // Video 5
+      "Smz0i3Xx0t",    // Video 6
+      "MGBF6NQTbI",    // Video 7
+      "ZgGzkHbrIAi",   // Video 8
+      "vOah2UpHKSO",   // Video 9
+      "Twyes9t5zE",    // Video 10
+      "EJ7MMZgdeq",    // Video 11
+      "Q6fVMWMTA",     // Video 12
+      "PSH4W0ICizO",   // Video 13
+      "t2o5adQ4",      // Video 14
+      "tNjie_mYCY",    // Video 15
+      "X4MeUFDeC_M",   // Video 16
+      "GbvAfryones",   // Video 17
+      "UeSpaceI0R64",  // Video 18
+      "dg7ABHtsrs",    // Video 19
+      "CHHXMoB04o",    // Video 20
+      "ZFY1MHyMFE",    // Video 21
+      "QsqqM0IngYwA",  // Video 22
+      "lCokOyy2TFE",   // Video 23
+      "MXekOqvy0LA",   // Video 24
+      "vqxhrTLKkg3"    // Video 25
+    ];
+
+    let currentIndex = 0;
+
+    // DOM Elements
+    const videoIframe = document.getElementById('short-video');
+    const counterElement = document.getElementById('counter');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const welcomePopup = document.getElementById('welcome-popup');
+    const continueBtn = document.getElementById('continue-btn');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeBtn = document.getElementById('close-btn');
+    const navbar = document.getElementById('navbar');
+
+    // Load a video by index
+    function loadVideo(index) {
+      // Handle boundaries
+      if (index < 0) index = youtubeShorts.length - 1;
+      if (index >= youtubeShorts.length) index = 0;
+      
+      currentIndex = index;
+      const videoId = youtubeShorts[currentIndex];
+      
+      // Create YouTube embed URL
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&rel=0&fs=0&modestbranding=1`;
+      
+      // Set iframe source
+      videoIframe.src = embedUrl;
+      
+      // Update counter
+      counterElement.textContent = `${currentIndex + 1} / ${youtubeShorts.length}`;
+      
+      // Save to localStorage
+      localStorage.setItem('gmd_last_video', currentIndex);
+    }
+
+    // Change video function
+    function changeVideo(direction) {
+      loadVideo(currentIndex + direction);
+    }
+
+    // Close welcome popup
+    function closePopup() {
+      welcomePopup.style.display = 'none';
+      // Load first video after closing popup
+      loadVideo(currentIndex);
+    }
+
+    // Toggle menu
+    function toggleMenu() {
+      navbar.classList.toggle('active');
+    }
+
+    // ================================
+    // EVENT LISTENERS
+    // ================================
+    
+    // Page loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 GMD Vibes loaded with', youtubeShorts.length, 'videos');
+      
+      // Set initial counter
+      counterElement.textContent = `1 / ${youtubeShorts.length}`;
+      
+      // Check if first visit
+      const hasVisited = localStorage.getItem('gmd_has_visited');
+      if (!hasVisited) {
+        // First visit - show popup
+        welcomePopup.style.display = 'flex';
+        localStorage.setItem('gmd_has_visited', 'true');
+      } else {
+        // Return visit - load last video
+        const lastIndex = parseInt(localStorage.getItem('gmd_last_video')) || 0;
+        loadVideo(lastIndex);
+        welcomePopup.style.display = 'none';
+      }
+      
+      // Load first video immediately (for testing)
+      loadVideo(0);
+    });
+
+    // Button event listeners
+    prevBtn.addEventListener('click', function() {
+      changeVideo(-1);
+    });
+
+    nextBtn.addEventListener('click', function() {
+      changeVideo(1);
+    });
+
+    continueBtn.addEventListener('click', closePopup);
+
+    menuIcon.addEventListener('click', toggleMenu);
+    closeBtn.addEventListener('click', toggleMenu);
+
+    // Close menu when clicking on links
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navbar.classList.remove('active');
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') {
+        changeVideo(-1);
+      }
+      if (e.key === 'ArrowRight') {
+        changeVideo(1);
+      }
+      if (e.key === 'Escape') {
+        navbar.classList.remove('active');
+      }
+      if (e.key === ' ') {
+        e.preventDefault();
+        // Toggle play/pause
+        const currentSrc = videoIframe.src;
+        if (currentSrc.includes('autoplay=1')) {
+          videoIframe.src = currentSrc.replace('autoplay=1', 'autoplay=0');
+        } else {
+          videoIframe.src = currentSrc.replace('autoplay=0', 'autoplay=1');
+        }
+      }
+    });
+
+    // Click outside to close menu
+    document.addEventListener('click', function(e) {
+      if (!navbar.contains(e.target) && 
+          !menuIcon.contains(e.target) && 
+          navbar.classList.contains('active')) {
+        navbar.classList.remove('active');
+      }
+    });
+
+    // Debug info
+    console.log('✅ JavaScript loaded successfully!');
+    console.log('🎥 Videos ready:', youtubeShorts.length);
+    console.log('🎮 Controls: ← → arrows, Space to pause, Esc to close menu');
+    
+    // Auto-load first video after 1 second (fallback)
+    setTimeout(function() {
+      if (videoIframe.src === '') {
+        console.log('🔄 Auto-loading first video...');
+        loadVideo(0);
+      }
+    }, 1000);
+
+  </script>
 </body>
 </html>
