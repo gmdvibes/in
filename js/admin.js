@@ -1,160 +1,266 @@
-// js/admin.js
-let shorts = [];
-
-// Load existing shorts
-async function loadShorts() {
-  try {
-    const response = await fetch('data/shorts.json');
-    const data = await response.json();
-    shorts = data.shorts || [];
-    displayShorts();
-  } catch (error) {
-    console.error("Error loading shorts:", error);
-    shorts = [];
-    displayShorts();
-  }
-}
-
-// Display shorts in admin panel
-function displayShorts() {
-  const container = document.getElementById('shorts-container');
-  const countElement = document.getElementById('count');
-  
-  if (shorts.length === 0) {
-    container.innerHTML = '<p style="color: #777; text-align: center;">No shorts added yet.</p>';
-    countElement.textContent = '0';
-    return;
-  }
-  
-  countElement.textContent = shorts.length;
-  container.innerHTML = '';
-  
-  shorts.forEach((url, index) => {
-    const div = document.createElement('div');
-    div.className = 'short-item';
+<!-- admin.html - Enhanced Version -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Add Shorts</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .admin-container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #222;
+      border-radius: 10px;
+    }
     
-    const videoId = getYouTubeVideoId(url);
-    const thumbnail = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+    .admin-container h2 {
+      color: #42e3f5;
+      text-align: center;
+      margin-bottom: 20px;
+    }
     
-    div.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="${thumbnail}" alt="Thumbnail" style="width: 60px; height: 45px; border-radius: 3px;">
-        <div>
-          <a href="${url}" target="_blank" style="color: #42e3f5; text-decoration: none;">
-            ${videoId || 'Invalid URL'}
-          </a>
-          <div style="font-size: 12px; color: #999;">${url}</div>
+    .admin-panel {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .add-section, .manage-section {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      background-color: #111;
+      border-radius: 8px;
+    }
+    
+    .add-section h3, .manage-section h3 {
+      color: #ff5722;
+      margin-bottom: 15px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    
+    .btn-primary {
+      background-color: purple;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #6a2a99;
+    }
+    
+    .btn-success {
+      background-color: #2ecc71;
+      color: white;
+    }
+    
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .btn-secondary {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .btn-warning {
+      background-color: #f39c12;
+      color: white;
+    }
+    
+    #shorts-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 15px;
+    }
+    
+    .short-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: #222;
+      border-radius: 5px;
+      border-left: 4px solid #42e3f5;
+    }
+    
+    .short-info {
+      flex: 1;
+    }
+    
+    .short-url {
+      color: #42e3f5;
+      word-break: break-all;
+      font-size: 14px;
+    }
+    
+    .short-id {
+      color: #999;
+      font-size: 12px;
+    }
+    
+    .short-actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .action-btn {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+    
+    .preview-btn {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .copy-btn {
+      background-color: #9b59b6;
+      color: white;
+    }
+    
+    #message {
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    
+    .success { 
+      background-color: rgba(46, 204, 113, 0.2); 
+      color: #2ecc71;
+      border: 1px solid #2ecc71;
+    }
+    
+    .error { 
+      background-color: rgba(231, 76, 60, 0.2); 
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
+    }
+    
+    .info { 
+      background-color: rgba(52, 152, 219, 0.2); 
+      color: #3498db;
+      border: 1px solid #3498db;
+    }
+    
+    .instructions {
+      background-color: rgba(243, 156, 18, 0.1);
+      border: 1px solid #f39c12;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      color: #f39c12;
+    }
+    
+    .instructions h4 {
+      margin-top: 0;
+      color: #f39c12;
+    }
+    
+    .instructions ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    
+    .instructions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>📱 GMD Vibes - Admin Panel</h2>
+    
+    <div class="admin-panel">
+      <div class="add-section">
+        <h3>➕ Add New Shorts</h3>
+        <div class="form-group">
+          <label for="video_url">YouTube Shorts URL:</label>
+          <input type="text" id="video_url" placeholder="https://youtube.com/shorts/VIDEO_ID">
+        </div>
+        
+        <button class="btn btn-primary" onclick="addShorts()">Add Shorts</button>
+        <button class="btn btn-secondary" onclick="addMultipleShorts()">Add Multiple (Paste List)</button>
+        
+        <div id="message"></div>
+        
+        <div class="instructions">
+          <h4>📝 How to Update on GitHub Pages:</h4>
+          <ol>
+            <li>Add/Delete shorts using buttons above</li>
+            <li>Click "Download JSON File"</li>
+            <li>Go to your GitHub repository</li>
+            <li>Upload the JSON file to <code>data/shorts.json</code></li>
+            <li>Your site will update automatically</li>
+          </ol>
         </div>
       </div>
-      <button class="delete-btn" onclick="deleteShort(${index})">Delete</button>
-    `;
-    
-    container.appendChild(div);
-  });
-}
-
-// Add new shorts
-async function addShorts() {
-  const urlInput = document.getElementById('video_url');
-  const url = urlInput.value.trim();
+      
+      <div class="manage-section">
+        <h3>📊 Manage Shorts (<span id="count">0</span> total)</h3>
+        
+        <div class="short-actions">
+          <button class="btn btn-success" onclick="downloadJSON()">💾 Download JSON File</button>
+          <button class="btn btn-warning" onclick="uploadJSON()">📤 Upload JSON File</button>
+          <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+        
+        <div id="shorts-list">
+          <!-- Shorts will appear here -->
+        </div>
+        
+        <div style="margin-top: 15px; text-align: center;">
+          <a href="index.html" style="color: #42e3f5; text-decoration: none; font-size: 14px;">
+            ← Back to Main Site
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
   
-  if (!url) {
-    showMessage('Please enter a URL', 'error');
-    return;
-  }
+  <!-- Hidden file input for JSON upload -->
+  <input type="file" id="json-upload" accept=".json" style="display: none;">
   
-  // Validate YouTube Shorts URL
-  if (!isValidYouTubeShortsUrl(url)) {
-    showMessage('Invalid YouTube Shorts URL. Must be like: https://youtube.com/shorts/VIDEO_ID', 'error');
-    return;
-  }
-  
-  // Check for duplicates
-  if (shorts.includes(url)) {
-    showMessage('This URL already exists!', 'error');
-    return;
-  }
-  
-  shorts.push(url);
-  
-  // Save to JSON file (GitHub Pages workaround)
-  await saveShorts();
-  
-  urlInput.value = '';
-  showMessage('Shorts added successfully!', 'success');
-  displayShorts();
-}
-
-// Delete shorts
-async function deleteShort(index) {
-  if (confirm('Are you sure you want to delete this shorts?')) {
-    shorts.splice(index, 1);
-    await saveShorts();
-    showMessage('Shorts deleted successfully!', 'success');
-    displayShorts();
-  }
-}
-
-// Save shorts to JSON (using localStorage as GitHub Pages can't write files)
-async function saveShorts() {
-  try {
-    // Create JSON data
-    const data = {
-      shorts: shorts,
-      lastUpdated: new Date().toISOString()
-    };
-    
-    // Save to localStorage (temporary solution)
-    localStorage.setItem('gmd_shorts_backup', JSON.stringify(data));
-    
-    // For GitHub Pages, we need a different approach:
-    // Method 1: Use GitHub API (requires authentication)
-    // Method 2: Use a third-party service like JSONbin or Firebase
-    // Method 3: Use GitHub Gists API (free, requires token)
-    
-    // Here's a simple localStorage fallback with download option
-    const jsonStr = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    
-    // Create download link for manual upload
-    const downloadLink = document.createElement('a');
-    downloadLink.href = url;
-    downloadLink.download = 'shorts.json';
-    downloadLink.style.display = 'none';
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    
-    showMessage('Shorts saved! Download the JSON file and replace data/shorts.json', 'success');
-    
-  } catch (error) {
-    console.error("Error saving shorts:", error);
-    showMessage('Error saving shorts. Please try again.', 'error');
-  }
-}
-
-// Helper functions
-function isValidYouTubeShortsUrl(url) {
-  const pattern = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/[a-zA-Z0-9_-]+$/;
-  return pattern.test(url);
-}
-
-function getYouTubeVideoId(url) {
-  const match = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/);
-  return match ? match[1] : null;
-}
-
-function showMessage(text, type) {
-  const messageDiv = document.getElementById('message');
-  messageDiv.textContent = text;
-  messageDiv.className = type;
-  messageDiv.style.display = 'block';
-  
-  setTimeout(() => {
-    messageDiv.style.display = 'none';
-  }, 5000);
-}
-
-// Initialize
-document.addEventListener('DOMContentLoaded', loadShorts);
+  <script src="js/admin.js"></script>
+</body>
+</html>
