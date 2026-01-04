@@ -1,164 +1,145 @@
-// js/main.js - Updated with your URLs
+// js/main.js - SIMPLE & WORKING VERSION
 let currentIndex = 0;
-let shorts = [];
 
-// Fetch shorts from JSON file
-async function loadShorts() {
-  try {
-    const response = await fetch('data/shorts.json');
-    const data = await response.json();
-    shorts = data.shorts;
-    
-    // Load first video if available
-    if (shorts.length > 0) {
-      loadVideo(currentIndex);
-    } else {
-      document.getElementById('short-video').src = '';
-      console.log("No shorts available");
-    }
-  } catch (error) {
-    console.error("Error loading shorts:", error);
-    // Fallback to your actual URLs
-    shorts = [
-      "https://youtube.com/shorts/QG191wmxCY?si=0DjhK__",
-      "https://youtube.com/shorts/EW5d777C2s?si=SL0E1aK__",
-      "https://youtube.com/shorts/FDH17QCvY?si=LGaMZJG__",
-      "https://youtube.com/shorts/tra1BGMwh5s?si=y4kUZP__",
-      "https://youtube.com/shorts/ZTJRfZrFWlTai-SzzenMQZ__",
-      "https://youtube.com/shorts/Smz0i3Xx0t?si=9VqUMp66__",
-      "https://youtube.com/shorts/MGBF6NQTbIFcTs+2eWDbaS__",
-      "https://youtube.com/shorts/ZgGzkHbrIAi?si=EFQ6WZGH__",
-      "https://youtube.com/shorts/vOah2UpHKSO?si=EgZNGQLU__",
-      "https://youtube.com/shorts/Twyes9t5zErS+Z7BQ97IP__",
-      "https://youtube.com/shorts/EJ7MMZgdeq?si=dfTeqh6u__",
-      "https://youtube.com/shorts/EJ7MMZgdeq?si=dfTeqh6u__",
-      "https://youtube.com/shorts/Q6fVMWMTA?si=Q6ByXFut__",
-      "https://youtube.com/shorts/PSH4W0ICizO?si=MINcMXpu__",
-      "https://youtube.com/shorts/t%2o5adQ4?si=SwemY1ag__",
-      "https://youtube.com/shorts/tNjie_mYCY?si=UCJSYXQp__",
-      "https://youtube.com/shorts/X4MeUFDeC_M?si=X7RWKB4__",
-      "https://youtube.com/shorts/GbvAfryones?si=nFeXOKT__",
-      "https://youtube.com/shorts/GbvAfryones?si=WS3W4DrN__",
-      "https://youtube.com/shorts/UeSpaceI0R64?si=ijF2Ninie__",
-      "https://youtube.com/shorts/dg7ABHtsrs?si=kof88oM3__",
-      "https://youtube.com/shorts/CHHXMoB04o?si=Wbg3wkn__",
-      "https://youtube.com/shorts/ZFY1MHyMFE?si=dds5DzHQ__",
-      "https://youtube.com/shorts/QsqqM0IngYwA?si=6MYE68DX__",
-      "https://youtube.com/shorts/lCokOyy2TFE?si=SOUJSyLS__",
-      "https://youtube.com/shorts/MXekOqvy0LA?si=BEADGFTS__",
-      "https://youtube.com/shorts/vqxhrTLKkg3?si=9KZTzgE__"
-    ];
-    if (shorts.length > 0) {
-      loadVideo(currentIndex);
-    }
-  }
-}
+// ✅ Your YouTube Shorts IDs (extracted from your database)
+const youtubeShorts = [
+    "QG191wmxCY",
+    "EW5d777C2s",
+    "FDH17QCvY",
+    "tra1BGMwh5s",
+    "ZTJRfZrFWl",
+    "Smz0i3Xx0t",
+    "MGBF6NQTbI",
+    "ZgGzkHbrIAi",
+    "vOah2UpHKSO",
+    "Twyes9t5zE",
+    "EJ7MMZgdeq",
+    "EJ7MMZgdeq",  // Duplicate in your database
+    "Q6fVMWMTA",
+    "PSH4W0ICizO",
+    "t2o5adQ4",
+    "tNjie_mYCY",
+    "X4MeUFDeC_M",
+    "GbvAfryones",
+    "GbvAfryones",  // Duplicate in your database
+    "UeSpaceI0R64",
+    "dg7ABHtsrs",
+    "CHHXMoB04o",
+    "ZFY1MHyMFE",
+    "QsqqM0IngYwA",
+    "lCokOyy2TFE",
+    "MXekOqvy0LA",
+    "vqxhrTLKkg3"
+];
 
+// Function to load video
 function loadVideo(index) {
-  if (shorts.length === 0) return;
-  
-  const videoUrl = shorts[index];
-  // Extract clean video ID (remove query parameters)
-  const cleanUrl = videoUrl.split('?')[0];
-  const embedUrl = cleanUrl.replace('youtube.com/shorts', 'youtube.com/embed');
-  const videoId = getYouTubeVideoId(cleanUrl);
-  
-  if (!videoId) {
-    console.error("Invalid video URL:", videoUrl);
-    // Skip to next video
-    changeVideo(1);
-    return;
-  }
-  
-  // Create autoplay URL with playlist for loop effect
-  const fullUrl = `${embedUrl}?autoplay=1&mute=0&controls=0&rel=0&fs=0&loop=1&playlist=${videoId}`;
-  
-  document.getElementById('short-video').src = fullUrl;
-  console.log(`Playing video ${index + 1}/${shorts.length}: ${videoId}`);
+    if (index < 0) index = youtubeShorts.length - 1;
+    if (index >= youtubeShorts.length) index = 0;
+    
+    currentIndex = index;
+    const videoId = youtubeShorts[currentIndex];
+    
+    // Update counter
+    document.getElementById('counter').textContent = `${currentIndex + 1} / ${youtubeShorts.length}`;
+    
+    // Create YouTube embed URL
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&rel=0&fs=0&loop=1&playlist=${videoId}&modestbranding=1`;
+    
+    // Set iframe source
+    const iframe = document.getElementById('short-video');
+    iframe.src = embedUrl;
+    
+    // Store current video in localStorage
+    localStorage.setItem('lastVideoIndex', currentIndex);
 }
 
+// Change video
 function changeVideo(direction) {
-  if (shorts.length === 0) return;
-  
-  currentIndex += direction;
-  if (currentIndex < 0) currentIndex = shorts.length - 1;
-  if (currentIndex >= shorts.length) currentIndex = 0;
-  
-  loadVideo(currentIndex);
+    loadVideo(currentIndex + direction);
 }
 
-function getYouTubeVideoId(url) {
-  // Extract video ID from various YouTube URL formats
-  const patterns = [
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
-    /youtu\.be\/([a-zA-Z0-9_-]+)/,
-    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/
-  ];
-  
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match) return match[1];
-  }
-  
-  return null;
-}
-
+// Close welcome popup
 function closePopup() {
-  document.getElementById('welcome-popup').style.display = 'none';
-  // Start playing first video after popup is closed
-  if (shorts.length > 0 && currentIndex === 0) {
-    loadVideo(0);
-  }
+    document.getElementById('welcome-popup').style.display = 'none';
+    // Start playing the video
+    loadVideo(currentIndex);
 }
 
+// Toggle menu
 function toggleMenu() {
-  document.getElementById('navbar').classList.toggle('active');
+    document.getElementById('navbar').classList.toggle('active');
 }
 
-// Video controls with better error handling
-function playVideo() {
-  const iframe = document.getElementById('short-video');
-  iframe.src += "&autoplay=1";
-}
-
-function pauseVideo() {
-  const iframe = document.getElementById('short-video');
-  iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-}
-
-// Close menu when nav link is clicked
+// Initialize when page loads
 document.addEventListener("DOMContentLoaded", () => {
-  loadShorts();
-  
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      document.getElementById('navbar').classList.remove('active');
+    console.log(`GMD Vibes - ${youtubeShorts.length} shorts loaded`);
+    
+    // Check if we should show popup (first visit)
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+        // Show popup on first visit
+        document.getElementById('welcome-popup').style.display = 'flex';
+        localStorage.setItem('hasVisited', 'true');
+    } else {
+        // Load last watched video or start from beginning
+        const lastIndex = parseInt(localStorage.getItem('lastVideoIndex')) || 0;
+        loadVideo(lastIndex);
+        document.getElementById('welcome-popup').style.display = 'none';
+    }
+    
+    // Close menu when nav link is clicked
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('navbar').classList.remove('active');
+        });
     });
-  });
-  
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') changeVideo(-1);
-    if (e.key === 'ArrowRight') changeVideo(1);
-    if (e.key === ' ') {
-      e.preventDefault();
-      // Toggle play/pause on spacebar
-      const iframe = document.getElementById('short-video');
-      iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-    }
-  });
-  
-  // Auto-play next video when current ends
-  const iframe = document.getElementById('short-video');
-  iframe.addEventListener('load', () => {
-    iframe.contentWindow.postMessage('{"event":"listening","id":"player"}', '*');
-  });
-  
-  // Listen for video end events
-  window.addEventListener('message', (event) => {
-    if (event.data === 'ended') {
-      changeVideo(1);
-    }
-  });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') changeVideo(-1);
+        if (e.key === 'ArrowRight') changeVideo(1);
+        if (e.key === 'Escape') {
+            document.getElementById('navbar').classList.remove('active');
+        }
+    });
+    
+    // Auto-play next video when current ends (YouTube API)
+    window.addEventListener('message', (event) => {
+        if (event.data === 'ended') {
+            changeVideo(1);
+        }
+    });
+    
+    // Try to listen to YouTube player events
+    const iframe = document.getElementById('short-video');
+    iframe.addEventListener('load', () => {
+        // Post message to start listening
+        iframe.contentWindow.postMessage('{"event":"listening","id":"player"}', '*');
+    });
 });
+
+// Function to get random video
+function getRandomVideo() {
+    const randomIndex = Math.floor(Math.random() * youtubeShorts.length);
+    loadVideo(randomIndex);
+}
+
+// Function to share current video
+function shareVideo() {
+    const videoId = youtubeShorts[currentIndex];
+    const url = `https://youtube.com/shorts/${videoId}`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'GMD Vibes - Romantic Reels',
+            text: 'Check out this romantic reel from GMD Vibes! ❤️',
+            url: url
+        });
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+}
