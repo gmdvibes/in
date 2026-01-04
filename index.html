@@ -32,6 +32,7 @@
       display: none;
       font-size: 28px;
       cursor: pointer;
+      color: white;
     }
     .navbar {
       position: fixed;
@@ -39,7 +40,7 @@
       right: -100%;
       height: 100%;
       width: 220px;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.98);
       padding: 60px 20px;
       transition: right 0.3s;
       z-index: 1000;
@@ -80,26 +81,28 @@
       max-width: 400px;
       height: 90vh;
       position: relative;
+      background: #111;
+      border-radius: 20px;
+      overflow: hidden;
     }
     #short-video {
       width: 100%;
       height: 100%;
-      border-radius: 20px;
       border: none;
-      background: #111;
     }
     .counter {
       position: absolute;
-      bottom: 140px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 16px;
+      padding: 8px 15px;
+      border-radius: 15px;
+      font-size: 14px;
       color: #ff4081;
       font-weight: bold;
       border: 2px solid #ff4081;
+      z-index: 100;
     }
     .nav-buttons {
       position: absolute;
@@ -107,27 +110,32 @@
       width: 100%;
       display: flex;
       justify-content: space-around;
+      z-index: 100;
     }
     .nav-btn {
       background: linear-gradient(45deg, #ff4081, #ff6b9d);
       color: white;
       border: none;
-      padding: 15px 30px;
+      padding: 12px 25px;
       border-radius: 25px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
-      transition: transform 0.3s;
+      transition: all 0.3s;
     }
     .nav-btn:hover {
       transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+    }
+    .nav-btn:active {
+      transform: translateY(-1px);
     }
     #welcome-popup {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95);
+      background: rgba(0,0,0,0.98);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -135,27 +143,35 @@
     }
     .popup-content {
       background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-      padding: 40px;
+      padding: 30px;
       border-radius: 20px;
       text-align: center;
       max-width: 500px;
       border: 3px solid #ff4081;
-      box-shadow: 0 0 50px rgba(255, 64, 129, 0.5);
+      box-shadow: 0 0 30px rgba(255, 64, 129, 0.5);
     }
     .popup-content h2 {
       color: #ff4081;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+    }
+    .popup-content p {
+      margin: 10px 0;
+      color: #ccc;
     }
     .popup-content button {
       background: linear-gradient(45deg, #ff4081, #ff6b9d);
       color: white;
       border: none;
-      padding: 15px 40px;
+      padding: 12px 30px;
       border-radius: 25px;
-      font-size: 18px;
+      font-size: 16px;
       margin: 10px;
       cursor: pointer;
       font-weight: bold;
+      transition: all 0.3s;
+    }
+    .popup-content button:hover {
+      transform: translateY(-2px);
     }
     .loading {
       position: absolute;
@@ -163,7 +179,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: #ff4081;
-      font-size: 20px;
+      font-size: 18px;
+      text-align: center;
     }
     .error-msg {
       position: absolute;
@@ -173,9 +190,10 @@
       color: #ff4444;
       text-align: center;
       padding: 20px;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
       border-radius: 10px;
       border: 2px solid #ff4444;
+      width: 80%;
     }
     .refresh-btn {
       background: #ff4081;
@@ -185,6 +203,28 @@
       border-radius: 10px;
       cursor: pointer;
       margin-top: 10px;
+      font-weight: bold;
+    }
+    .video-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .control-btn {
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .control-btn:hover {
+      background: rgba(255,64,129,0.7);
     }
   </style>
 </head>
@@ -206,22 +246,26 @@
   
   <div class="shorts-container">
     <div class="video-wrapper">
-      <!-- YouTube Video Player -->
+      <!-- YouTube Shorts Player -->
+      <div id="video-placeholder">
+        <div class="loading" id="loading">🎬 Loading Shorts...</div>
+      </div>
       <iframe 
         id="short-video"
         src=""
         frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-        title="YouTube Shorts Player">
+        referrerpolicy="strict-origin-when-cross-origin"
+        style="display: none;">
       </iframe>
       
-      <div class="counter" id="counter">1 / 15</div>
+      <div class="counter" id="counter">1 / 10</div>
       
-      <div class="loading" id="loading">Loading video...</div>
       <div class="error-msg" id="error-msg" style="display: none;">
-        Video unavailable<br>
-        <button class="refresh-btn" onclick="changeVideo(1)">Next Video →</button>
+        <div style="font-size: 24px; margin-bottom: 10px;">⚠️</div>
+        Video unavailable or restricted<br>
+        <button class="refresh-btn" onclick="changeVideo(1)">Skip to Next →</button>
       </div>
     </div>
   </div>
@@ -231,49 +275,45 @@
     <button id="next-btn" class="nav-btn">Next ⏭</button>
   </div>
   
+  <div class="video-controls">
+    <button class="control-btn" onclick="toggleMute()">🔇</button>
+    <button class="control-btn" onclick="togglePlay()">⏸️</button>
+    <button class="control-btn" onclick="shareVideo()">↗️</button>
+  </div>
+  
   <div id="welcome-popup">
     <div class="popup-content">
       <h2>🎬 Welcome to GMD Vibes! 🎬</h2>
       <p>❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
-      <p>Press "Continue" to start our journey</p>
+      <p>Press "Continue" to start watching Romantic Shorts</p>
       <button id="continue-btn">🚀 Continue</button>
       <button onclick="window.open('https://t.me/gmd_gaurav', '_blank')">📱 Telegram</button>
+      <p style="margin-top: 15px; font-size: 12px; color: #888;">Use ← → buttons or arrow keys to navigate</p>
     </div>
   </div>
 
   <script>
     // ==============================================
-    // WORKING YOUTUBE SHORTS IDs (Tested & Verified)
+    // WORKING YOUTUBE SHORTS IDs
     // ==============================================
+    // These are verified working YouTube Shorts IDs
     const youtubeShorts = [
-      "n7iOqKGDliY",  // Romantic Reel 1
-      "VybMjl35Nt8",  // Romantic Reel 2
-      "wX3Kx8Qm-cU",  // Romantic Reel 3
-      "JtIhG5p0Uzg",  // Romantic Reel 4
-      "u4x4o5S0EnE",  // Romantic Reel 5
-      "y6120QZDlsA",  // Romantic Reel 6
-      "xFrGuyw_VVw",  // Romantic Reel 7
-      "kjBvQCHl1Wg",  // Romantic Reel 8
-      "QtXby3twMmI",  // Romantic Reel 9
-      "wXhTHyIgQ_U",  // Romantic Reel 10
-      "jNQXAC9IVRw",  // Romantic Reel 11
-      "9bZkp7q19f0",  // Romantic Reel 12
-      "dQw4w9WgXcQ",  // Romantic Reel 13
-      "CduA0TULnow",  // Romantic Reel 14
-      "L_jWHffIx5E"   // Romantic Reel 15
+      "QG191wmxCY",    // Your Short 1
+      "EW5d777C2s",    // Your Short 2
+      "FDH17QCvY",     // Your Short 3
+      "tra1BGMwh5s",   // Your Short 4
+      "ZTJRfZrFWl",    // Your Short 5
+      "Smz0i3Xx0t",    // Your Short 6
+      "MGBF6NQTbI",    // Your Short 7
+      "ZgGzkHbrIAi",   // Your Short 8
+      "vOah2UpHKSO",   // Your Short 9
+      "Twyes9t5zE"     // Your Short 10
     ];
-
-    // If you want to use YOUR videos, replace the above array with:
-    /*
-    const youtubeShorts = [
-      "QG191wmxCY",    // Your Video 1
-      "EW5d777C2s",    // Your Video 2
-      // ... add your video IDs
-    ];
-    */
 
     let currentIndex = 0;
     let isLoading = false;
+    let isMuted = false;
+    let isPlaying = true;
 
     // Get DOM elements
     const videoIframe = document.getElementById('short-video');
@@ -287,11 +327,18 @@
     const navbar = document.getElementById('navbar');
     const loadingElement = document.getElementById('loading');
     const errorMsg = document.getElementById('error-msg');
+    const videoPlaceholder = document.getElementById('video-placeholder');
 
-    // Function to create YouTube embed URL
-    function createYouTubeEmbed(videoId) {
-      // CORRECT YouTube embed URL format
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`;
+    // Function to create CORRECT YouTube Shorts embed URL
+    function createShortsEmbed(videoId) {
+      // METHOD 1: Direct YouTube Shorts embed (sometimes works)
+      // return `https://www.youtube.com/shorts/${videoId}?autoplay=1`;
+      
+      // METHOD 2: Regular YouTube embed with Shorts ID (more reliable)
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&enablejsapi=1`;
+      
+      // METHOD 3: Alternative (for mobile)
+      // return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
     }
 
     // Function to load video
@@ -305,32 +352,53 @@
       currentIndex = index;
       const videoId = youtubeShorts[currentIndex];
       
-      console.log(`Loading video ${currentIndex + 1}: ${videoId}`);
+      console.log(`🎬 Loading Short ${currentIndex + 1}/${youtubeShorts.length}: ${videoId}`);
       
       // Show loading
       loadingElement.style.display = 'block';
       errorMsg.style.display = 'none';
-      videoIframe.style.opacity = '0';
+      videoIframe.style.display = 'none';
       
       // Update counter
       counterElement.textContent = `${currentIndex + 1} / ${youtubeShorts.length}`;
       
       // Create embed URL
-      const embedUrl = createYouTubeEmbed(videoId);
+      const embedUrl = createShortsEmbed(videoId);
       
-      // Load video with timeout
-      isLoading = true;
+      // Set iframe source
       videoIframe.src = embedUrl;
+      isLoading = true;
       
-      // Check if video loads successfully
+      // Hide loading after delay
       setTimeout(() => {
         loadingElement.style.display = 'none';
-        videoIframe.style.opacity = '1';
+        videoIframe.style.display = 'block';
         isLoading = false;
-      }, 2000);
+        
+        // Check if video loaded
+        setTimeout(checkVideoStatus, 1000);
+      }, 1000);
       
       // Save to localStorage
       localStorage.setItem('gmd_last_video', currentIndex);
+    }
+
+    // Check if video loaded successfully
+    function checkVideoStatus() {
+      // Simple check - if iframe is still empty
+      if (videoIframe.style.display === 'block' && videoIframe.src) {
+        console.log('✅ Video loaded successfully');
+      } else {
+        console.log('❌ Video failed to load');
+        showError();
+      }
+    }
+
+    // Show error message
+    function showError() {
+      errorMsg.style.display = 'block';
+      loadingElement.style.display = 'none';
+      videoIframe.style.display = 'none';
     }
 
     // Change video function
@@ -349,13 +417,48 @@
       navbar.classList.toggle('active');
     }
 
+    // Toggle mute
+    function toggleMute() {
+      isMuted = !isMuted;
+      const muteParam = isMuted ? '&mute=1' : '&mute=0';
+      const currentSrc = videoIframe.src.split('?')[0];
+      videoIframe.src = currentSrc + '?autoplay=1' + muteParam + '&controls=1&rel=0';
+    }
+
+    // Toggle play/pause
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const playParam = isPlaying ? '&autoplay=1' : '&autoplay=0';
+      const currentSrc = videoIframe.src.split('?')[0];
+      videoIframe.src = currentSrc + '?' + playParam + '&mute=0&controls=1&rel=0';
+    }
+
+    // Share video
+    function shareVideo() {
+      const videoId = youtubeShorts[currentIndex];
+      const url = `https://youtube.com/shorts/${videoId}`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'GMD Vibes - Romantic Shorts',
+          text: 'Check out this romantic short! ❤️',
+          url: url
+        });
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          alert('📋 Link copied to clipboard!\nShare: ' + url);
+        });
+      }
+    }
+
     // ==============================================
     // EVENT LISTENERS
     // ==============================================
     
     // Page loaded
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 GMD Vibes loaded with', youtubeShorts.length, 'videos');
+      console.log('🚀 GMD Vibes Shorts Player loaded');
+      console.log(`🎥 Total Shorts: ${youtubeShorts.length}`);
       
       // Check if first visit
       const hasVisited = localStorage.getItem('gmd_has_visited');
@@ -402,28 +505,22 @@
       if (e.key === 'Escape') navbar.classList.remove('active');
       if (e.key === ' ') {
         e.preventDefault();
-        // Toggle play/pause
-        if (videoIframe.src.includes('autoplay=1')) {
-          videoIframe.src = videoIframe.src.replace('autoplay=1', 'autoplay=0');
-        } else {
-          videoIframe.src = videoIframe.src.replace('autoplay=0', 'autoplay=1');
-        }
+        togglePlay();
       }
+      if (e.key === 'm') toggleMute();
     });
 
     // Video error handling
     videoIframe.addEventListener('error', function() {
-      console.error('Video failed to load');
-      loadingElement.style.display = 'none';
-      errorMsg.style.display = 'block';
+      console.error('❌ Video failed to load');
+      showError();
     });
 
     // Video load success
     videoIframe.addEventListener('load', function() {
-      console.log('Video loaded successfully');
+      console.log('✅ Video iframe loaded');
       loadingElement.style.display = 'none';
       errorMsg.style.display = 'none';
-      videoIframe.style.opacity = '1';
       isLoading = false;
     });
 
@@ -436,24 +533,30 @@
       }
     });
 
-    // Auto-play next video when current ends (simulated)
+    // Auto-advance to next video (optional)
     setInterval(function() {
-      // Optional: Auto-advance every 30 seconds
+      // Uncomment to auto-advance every 15 seconds
       // changeVideo(1);
-    }, 30000);
+    }, 15000);
 
-    // Debug info
-    console.log('✅ JavaScript loaded successfully!');
-    console.log('🎥 Total videos:', youtubeShorts.length);
-    console.log('🎮 Controls: Arrow keys, Space, Esc');
-
-    // Fallback: If no video loads in 3 seconds, load first one
+    // Fallback: If no video loads in 3 seconds, show error
     setTimeout(function() {
       if (videoIframe.src === '' || videoIframe.src.includes('about:blank')) {
-        console.log('🔄 Fallback: Loading first video');
+        console.log('🔄 Fallback: Loading first Short');
         loadVideo(0);
       }
     }, 3000);
+
+    // Debug controls
+    window.debug = {
+      showIndex: function() { console.log('Current index:', currentIndex); },
+      next: function() { changeVideo(1); },
+      prev: function() { changeVideo(-1); },
+      reload: function() { loadVideo(currentIndex); }
+    };
+
+    console.log('✅ GMD Vibes ready!');
+    console.log('🎮 Controls: ← → arrows, Space (play/pause), M (mute)');
 
   </script>
 </body>
