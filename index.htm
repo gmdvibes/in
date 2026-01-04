@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="favicon_128.png">
+  <meta property="og:title" content="GMD Vibes - Love & Shayari Reels">
+  <meta property="og:description" content="Watch romantic reels, heart-touching shayari, and trending love stories. Fall in love with every scroll.">
+  <meta property="og:url" content="https://yourusername.github.io">
+  <meta property="og:type" content="website">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+  <title>GMD Vibes - Romantic Reels & Shayari</title>
+  <meta name="description" content="Explore romantic YouTube Shorts, love shayari, reels, and relationship stories. Discover unique gifts and heart-melting content at GMD Vibes.">
+  <meta name="keywords" content="Love Reels, Romantic Shorts, Shayari Videos, YouTube Shorts, GMD Vibes, Romantic Gifts, Trending Reels, Breakup Shayari, Love Stories, Crush Reels, Romantic status, viral love videos, relationship content, gift shop India">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="logo">GMD Vibes ❤️</div>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  </div>
+  
+  <div class="navbar" id="navbar">
+    <button class="close-btn" onclick="toggleMenu()">&times;</button>
+    <a href="#" class="nav-link">Home</a>
+    <a href="img.htm" class="nav-link">Art</a>
+    <a href="#" class="nav-link">Love Stories❌️</a>
+    <a href="#" class="nav-link">Gift Ideas❌️</a>
+    <a href="#" class="nav-link">Relationship Tips❌️</a>
+    <a href="https://t.me/gmd_gaurav" target="_blank" class="nav-link">Telegram</a>
+  </div>
+  
+  <div class="shorts-container">
+    <iframe id="short-video" src="" allow="autoplay; encrypted-media" frameborder="0" loading="lazy"></iframe>
+  </div>
+  
+  <div class="nav-buttons">
+    <button id="prev" class="nav-btn" onclick="changeVideo(-1)">Previous</button>
+    <button id="next" class="nav-btn" onclick="changeVideo(1)">Next</button>
+  </div>
+  
+  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; text-align: center; color: white;">
+    <div style="background-color: #333; padding: 20px; border-radius: 10px; max-width: 500px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);">
+      <h2>Welcome to GMD Vibes!</h2><br>
+      <p>❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p> <br>
+      <p>Press "Continue" to start our journey.</p>
+      <button onclick="closePopup()" style="margin-top: 10px; padding: 10px 20px; background-color: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;">Continue</button>  
+      <button id="guide" style="margin-top: 10px; padding: 10px 20px; background-color: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;">  
+        <a href="https://t.me/gmd_gaurav" target="_blank" style="color: white; text-decoration: none;">Telegram</a>  
+      </button>  
+    </div>  
+  </div>
+  
+  <script src="js/main.js"></script>
+</body>
+</html>
