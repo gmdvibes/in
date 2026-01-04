@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="favicon_128.png">
   <meta property="og:title" content="GMD Vibes - Love & Shayari Reels">
   <meta property="og:description" content="Watch romantic reels, heart-touching shayari, and trending love stories. Fall in love with every scroll.">
-  <meta property="og:url" content="https://yourusername.github.io">
+  <meta property="og:url" content="https://gmdvibes.github.io">
   <meta property="og:type" content="website">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
@@ -12,7 +12,125 @@
   <meta name="description" content="Explore romantic YouTube Shorts, love shayari, reels, and relationship stories. Discover unique gifts and heart-melting content at GMD Vibes.">
   <meta name="keywords" content="Love Reels, Romantic Shorts, Shayari Videos, YouTube Shorts, GMD Vibes, Romantic Gifts, Trending Reels, Breakup Shayari, Love Stories, Crush Reels, Romantic status, viral love videos, relationship content, gift shop India">
   <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+    }
+    .header {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      right: 20px;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      color: #42e3f5;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .menu-icon {
+      display: none;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      height: 100%;
+      width: 220px;
+      background-color: rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      padding: 60px 20px;
+      transition: right 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    .navbar.active { right: 0; }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      margin: 15px 0;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
+    .nav-link:hover { color: #42e3f5; }
+    @media (max-width: 768px) {
+      .menu-icon { display: block; }
+    }
+    .shorts-container {
+      width: 100%;
+      height: calc(100vh - 80px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .shorts-container iframe {
+      width: 100%;
+      max-width: 400px;
+      height: 90%;
+      border: none;
+      border-radius: 10px;
+    }
+    .nav-buttons {
+      position: absolute;
+      bottom: 70px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      z-index: 100;
+    }
+    .nav-btn {
+      background-color: purple;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 25px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(128, 0, 128, 0.3);
+      transition: all 0.3s;
+    }
+    .nav-btn:hover {
+      background-color: #6a2a99;
+      transform: translateY(-2px);
+    }
+    .counter {
+      position: absolute;
+      bottom: 130px;
+      color: #42e3f5;
+      font-size: 14px;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 15px;
+      border-radius: 15px;
+    }
+  </style>
 </head>
 <body>
   <div class="header">
@@ -31,23 +149,34 @@
   </div>
   
   <div class="shorts-container">
-    <iframe id="short-video" src="" allow="autoplay; encrypted-media" frameborder="0" loading="lazy"></iframe>
+    <iframe id="short-video" 
+            src="" 
+            allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            frameborder="0">
+    </iframe>
   </div>
+  
+  <div class="counter" id="counter">1 / 27</div>
   
   <div class="nav-buttons">
-    <button id="prev" class="nav-btn" onclick="changeVideo(-1)">Previous</button>
-    <button id="next" class="nav-btn" onclick="changeVideo(1)">Next</button>
+    <button id="prev" class="nav-btn" onclick="changeVideo(-1)">⏮ Previous</button>
+    <button id="next" class="nav-btn" onclick="changeVideo(1)">Next ⏭</button>
   </div>
   
-  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; text-align: center; color: white;">
-    <div style="background-color: #333; padding: 20px; border-radius: 10px; max-width: 500px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);">
-      <h2>Welcome to GMD Vibes!</h2><br>
-      <p>❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p> <br>
-      <p>Press "Continue" to start our journey.</p>
-      <button onclick="closePopup()" style="margin-top: 10px; padding: 10px 20px; background-color: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;">Continue</button>  
-      <button id="guide" style="margin-top: 10px; padding: 10px 20px; background-color: #ff5722; color: white; border: none; border-radius: 5px; cursor: pointer;">  
-        <a href="https://t.me/gmd_gaurav" target="_blank" style="color: white; text-decoration: none;">Telegram</a>  
-      </button>  
+  <!-- Welcome Popup -->
+  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; text-align: center; color: white;">
+    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 2px solid #42e3f5;">
+      <h2 style="color: #42e3f5; margin-bottom: 20px;">🎬 Welcome to GMD Vibes! 🎬</h2>
+      <p style="font-size: 18px; margin-bottom: 10px;">❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
+      <p style="margin-bottom: 25px; color: #ccc;">Press "Continue" to start our journey with Romantic Reels & Shayari</p>
+      <div style="display: flex; gap: 15px; justify-content: center;">
+        <button onclick="closePopup()" style="padding: 12px 30px; background: linear-gradient(45deg, #ff5722, #ff9800); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);">🚀 Continue</button>  
+        <button style="padding: 12px 30px; background: linear-gradient(45deg, #2196F3, #21CBF3); border: none; border-radius: 25px; cursor: pointer;">  
+          <a href="https://t.me/gmd_gaurav" target="_blank" style="color: white; text-decoration: none; font-size: 16px; font-weight: bold;">📱 Telegram</a>  
+        </button>  
+      </div>
+      <p style="margin-top: 20px; font-size: 12px; color: #888;">Use ← → buttons or arrow keys to navigate</p>
     </div>  
   </div>
   
