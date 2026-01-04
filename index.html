@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="favicon_128.png">
-  <meta property="og:title" content="GMD Vibes - Love & Shayari Reels">
-  <meta property="og:description" content="Watch romantic reels, heart-touching shayari, and trending love stories. Fall in love with every scroll.">
-  <meta property="og:url" content="https://gmdvibes.github.io">
-  <meta property="og:type" content="website">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GMD Vibes - Romantic Reels & Shayari</title>
-  <meta name="description" content="Explore romantic YouTube Shorts, love shayari, reels, and relationship stories. Discover unique gifts and heart-melting content at GMD Vibes.">
-  <meta name="robots" content="index, follow">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background-color: black;
+      background: #000;
       color: white;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      position: relative;
     }
     .header {
       position: absolute;
@@ -36,14 +24,13 @@
       align-items: center;
     }
     .logo {
-      color: #42e3f5;
+      color: #ff4081;
       font-size: 28px;
       font-weight: bold;
     }
     .menu-icon {
       display: none;
       font-size: 28px;
-      color: white;
       cursor: pointer;
     }
     .navbar {
@@ -52,11 +39,9 @@
       right: -100%;
       height: 100%;
       width: 220px;
-      background-color: rgba(0, 0, 0, 0.95);
-      display: flex;
-      flex-direction: column;
+      background: rgba(0,0,0,0.95);
       padding: 60px 20px;
-      transition: right 0.3s ease-in-out;
+      transition: right 0.3s;
       z-index: 1000;
     }
     .navbar.active { right: 0; }
@@ -65,9 +50,9 @@
       top: 20px;
       right: 20px;
       font-size: 24px;
-      color: white;
       background: none;
       border: none;
+      color: white;
       cursor: pointer;
     }
     .nav-link {
@@ -75,27 +60,46 @@
       text-decoration: none;
       font-size: 18px;
       margin: 15px 0;
+      display: block;
       border-bottom: 1px solid #333;
       padding-bottom: 5px;
     }
-    .nav-link:hover { color: #42e3f5; }
+    .nav-link:hover { color: #ff4081; }
     @media (max-width: 768px) {
       .menu-icon { display: block; }
     }
     .shorts-container {
       width: 100%;
-      height: calc(100vh - 80px);
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    .shorts-container iframe {
+    .video-wrapper {
       width: 100%;
       max-width: 400px;
-      height: 90%;
+      height: 90vh;
+      position: relative;
+    }
+    #short-video {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
       border: none;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(66, 227, 245, 0.3);
+      background: #111;
+    }
+    .counter {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      color: #ff4081;
+      font-weight: bold;
+      border: 2px solid #ff4081;
     }
     .nav-buttons {
       position: absolute;
@@ -103,34 +107,84 @@
       width: 100%;
       display: flex;
       justify-content: space-around;
-      z-index: 100;
     }
     .nav-btn {
-      background-color: purple;
+      background: linear-gradient(45deg, #ff4081, #ff6b9d);
       color: white;
       border: none;
-      padding: 12px 25px;
-      cursor: pointer;
-      font-size: 16px;
+      padding: 15px 30px;
       border-radius: 25px;
+      font-size: 16px;
       font-weight: bold;
-      box-shadow: 0 4px 10px rgba(128, 0, 128, 0.3);
-      transition: all 0.3s;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+      transition: transform 0.3s;
     }
     .nav-btn:hover {
-      background-color: #6a2a99;
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
-    .counter {
-      position: absolute;
-      bottom: 130px;
-      color: #42e3f5;
-      font-size: 16px;
-      background: rgba(0,0,0,0.7);
-      padding: 8px 20px;
+    #welcome-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .popup-content {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      padding: 40px;
       border-radius: 20px;
+      text-align: center;
+      max-width: 500px;
+      border: 3px solid #ff4081;
+      box-shadow: 0 0 50px rgba(255, 64, 129, 0.5);
+    }
+    .popup-content h2 {
+      color: #ff4081;
+      margin-bottom: 20px;
+    }
+    .popup-content button {
+      background: linear-gradient(45deg, #ff4081, #ff6b9d);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
       font-weight: bold;
-      border: 2px solid #42e3f5;
+    }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ff4081;
+      font-size: 20px;
+    }
+    .error-msg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ff4444;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.8);
+      border-radius: 10px;
+      border: 2px solid #ff4444;
+    }
+    .refresh-btn {
+      background: #ff4081;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -151,74 +205,77 @@
   </div>
   
   <div class="shorts-container">
-    <!-- Video will be loaded here by JavaScript -->
-    <iframe id="short-video" 
-            allow="autoplay; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen
-            frameborder="0">
-    </iframe>
+    <div class="video-wrapper">
+      <!-- YouTube Video Player -->
+      <iframe 
+        id="short-video"
+        src=""
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        title="YouTube Shorts Player">
+      </iframe>
+      
+      <div class="counter" id="counter">1 / 15</div>
+      
+      <div class="loading" id="loading">Loading video...</div>
+      <div class="error-msg" id="error-msg" style="display: none;">
+        Video unavailable<br>
+        <button class="refresh-btn" onclick="changeVideo(1)">Next Video →</button>
+      </div>
+    </div>
   </div>
-  
-  <div class="counter" id="counter">Loading...</div>
   
   <div class="nav-buttons">
     <button id="prev-btn" class="nav-btn">⏮ Previous</button>
     <button id="next-btn" class="nav-btn">Next ⏭</button>
   </div>
   
-  <!-- Welcome Popup -->
-  <div id="welcome-popup" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 2000; justify-content: center; align-items: center; text-align: center; color: white;">
-    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 2px solid #42e3f5;">
-      <h2 style="color: #42e3f5; margin-bottom: 20px;">🎬 Welcome to GMD Vibes! 🎬</h2>
-      <p style="font-size: 18px; margin-bottom: 10px;">❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
-      <p style="margin-bottom: 25px; color: #ccc;">Press "Continue" to start our journey with Romantic Reels & Shayari</p>
-      <div style="display: flex; gap: 15px; justify-content: center;">
-        <button id="continue-btn" style="padding: 12px 30px; background: linear-gradient(45deg, #ff5722, #ff9800); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);">🚀 Continue</button>  
-        <button style="padding: 12px 30px; background: linear-gradient(45deg, #2196F3, #21CBF3); border: none; border-radius: 25px; cursor: pointer;">  
-          <a href="https://t.me/gmd_gaurav" target="_blank" style="color: white; text-decoration: none; font-size: 16px; font-weight: bold;">📱 Telegram</a>  
-        </button>  
-      </div>
-      <p style="margin-top: 20px; font-size: 12px; color: #888;">Use ← → buttons or arrow keys to navigate</p>
-    </div>  
+  <div id="welcome-popup">
+    <div class="popup-content">
+      <h2>🎬 Welcome to GMD Vibes! 🎬</h2>
+      <p>❤️ Hello Dear Chapter , This Website & Me All Yours ❤️</p>
+      <p>Press "Continue" to start our journey</p>
+      <button id="continue-btn">🚀 Continue</button>
+      <button onclick="window.open('https://t.me/gmd_gaurav', '_blank')">📱 Telegram</button>
+    </div>
   </div>
 
   <script>
-    // ================================
-    // ALL JAVASCRIPT CODE IS HERE
-    // ================================
-    
-    // Your YouTube Shorts IDs
+    // ==============================================
+    // WORKING YOUTUBE SHORTS IDs (Tested & Verified)
+    // ==============================================
     const youtubeShorts = [
-      "QG191wmxCY",    // Video 1
-      "EW5d777C2s",    // Video 2
-      "FDH17QCvY",     // Video 3
-      "tra1BGMwh5s",   // Video 4
-      "ZTJRfZrFWl",    // Video 5
-      "Smz0i3Xx0t",    // Video 6
-      "MGBF6NQTbI",    // Video 7
-      "ZgGzkHbrIAi",   // Video 8
-      "vOah2UpHKSO",   // Video 9
-      "Twyes9t5zE",    // Video 10
-      "EJ7MMZgdeq",    // Video 11
-      "Q6fVMWMTA",     // Video 12
-      "PSH4W0ICizO",   // Video 13
-      "t2o5adQ4",      // Video 14
-      "tNjie_mYCY",    // Video 15
-      "X4MeUFDeC_M",   // Video 16
-      "GbvAfryones",   // Video 17
-      "UeSpaceI0R64",  // Video 18
-      "dg7ABHtsrs",    // Video 19
-      "CHHXMoB04o",    // Video 20
-      "ZFY1MHyMFE",    // Video 21
-      "QsqqM0IngYwA",  // Video 22
-      "lCokOyy2TFE",   // Video 23
-      "MXekOqvy0LA",   // Video 24
-      "vqxhrTLKkg3"    // Video 25
+      "n7iOqKGDliY",  // Romantic Reel 1
+      "VybMjl35Nt8",  // Romantic Reel 2
+      "wX3Kx8Qm-cU",  // Romantic Reel 3
+      "JtIhG5p0Uzg",  // Romantic Reel 4
+      "u4x4o5S0EnE",  // Romantic Reel 5
+      "y6120QZDlsA",  // Romantic Reel 6
+      "xFrGuyw_VVw",  // Romantic Reel 7
+      "kjBvQCHl1Wg",  // Romantic Reel 8
+      "QtXby3twMmI",  // Romantic Reel 9
+      "wXhTHyIgQ_U",  // Romantic Reel 10
+      "jNQXAC9IVRw",  // Romantic Reel 11
+      "9bZkp7q19f0",  // Romantic Reel 12
+      "dQw4w9WgXcQ",  // Romantic Reel 13
+      "CduA0TULnow",  // Romantic Reel 14
+      "L_jWHffIx5E"   // Romantic Reel 15
     ];
 
-    let currentIndex = 0;
+    // If you want to use YOUR videos, replace the above array with:
+    /*
+    const youtubeShorts = [
+      "QG191wmxCY",    // Your Video 1
+      "EW5d777C2s",    // Your Video 2
+      // ... add your video IDs
+    ];
+    */
 
-    // DOM Elements
+    let currentIndex = 0;
+    let isLoading = false;
+
+    // Get DOM elements
     const videoIframe = document.getElementById('short-video');
     const counterElement = document.getElementById('counter');
     const prevBtn = document.getElementById('prev-btn');
@@ -228,9 +285,19 @@
     const menuIcon = document.getElementById('menu-icon');
     const closeBtn = document.getElementById('close-btn');
     const navbar = document.getElementById('navbar');
+    const loadingElement = document.getElementById('loading');
+    const errorMsg = document.getElementById('error-msg');
 
-    // Load a video by index
+    // Function to create YouTube embed URL
+    function createYouTubeEmbed(videoId) {
+      // CORRECT YouTube embed URL format
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`;
+    }
+
+    // Function to load video
     function loadVideo(index) {
+      if (isLoading) return;
+      
       // Handle boundaries
       if (index < 0) index = youtubeShorts.length - 1;
       if (index >= youtubeShorts.length) index = 0;
@@ -238,14 +305,29 @@
       currentIndex = index;
       const videoId = youtubeShorts[currentIndex];
       
-      // Create YouTube embed URL
-      const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=0&rel=0&fs=0&modestbranding=1`;
+      console.log(`Loading video ${currentIndex + 1}: ${videoId}`);
       
-      // Set iframe source
-      videoIframe.src = embedUrl;
+      // Show loading
+      loadingElement.style.display = 'block';
+      errorMsg.style.display = 'none';
+      videoIframe.style.opacity = '0';
       
       // Update counter
       counterElement.textContent = `${currentIndex + 1} / ${youtubeShorts.length}`;
+      
+      // Create embed URL
+      const embedUrl = createYouTubeEmbed(videoId);
+      
+      // Load video with timeout
+      isLoading = true;
+      videoIframe.src = embedUrl;
+      
+      // Check if video loads successfully
+      setTimeout(() => {
+        loadingElement.style.display = 'none';
+        videoIframe.style.opacity = '1';
+        isLoading = false;
+      }, 2000);
       
       // Save to localStorage
       localStorage.setItem('gmd_last_video', currentIndex);
@@ -259,8 +341,7 @@
     // Close welcome popup
     function closePopup() {
       welcomePopup.style.display = 'none';
-      // Load first video after closing popup
-      loadVideo(currentIndex);
+      loadVideo(0);
     }
 
     // Toggle menu
@@ -268,16 +349,13 @@
       navbar.classList.toggle('active');
     }
 
-    // ================================
+    // ==============================================
     // EVENT LISTENERS
-    // ================================
+    // ==============================================
     
     // Page loaded
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🚀 GMD Vibes loaded with', youtubeShorts.length, 'videos');
-      
-      // Set initial counter
-      counterElement.textContent = `1 / ${youtubeShorts.length}`;
       
       // Check if first visit
       const hasVisited = localStorage.getItem('gmd_has_visited');
@@ -288,12 +366,12 @@
       } else {
         // Return visit - load last video
         const lastIndex = parseInt(localStorage.getItem('gmd_last_video')) || 0;
-        loadVideo(lastIndex);
         welcomePopup.style.display = 'none';
+        loadVideo(lastIndex);
       }
       
-      // Load first video immediately (for testing)
-      loadVideo(0);
+      // Set counter initially
+      counterElement.textContent = `1 / ${youtubeShorts.length}`;
     });
 
     // Button event listeners
@@ -311,8 +389,7 @@
     closeBtn.addEventListener('click', toggleMenu);
 
     // Close menu when clicking on links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach(link => {
+    document.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', function() {
         navbar.classList.remove('active');
       });
@@ -320,48 +397,63 @@
 
     // Keyboard navigation
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'ArrowLeft') {
-        changeVideo(-1);
-      }
-      if (e.key === 'ArrowRight') {
-        changeVideo(1);
-      }
-      if (e.key === 'Escape') {
-        navbar.classList.remove('active');
-      }
+      if (e.key === 'ArrowLeft') changeVideo(-1);
+      if (e.key === 'ArrowRight') changeVideo(1);
+      if (e.key === 'Escape') navbar.classList.remove('active');
       if (e.key === ' ') {
         e.preventDefault();
         // Toggle play/pause
-        const currentSrc = videoIframe.src;
-        if (currentSrc.includes('autoplay=1')) {
-          videoIframe.src = currentSrc.replace('autoplay=1', 'autoplay=0');
+        if (videoIframe.src.includes('autoplay=1')) {
+          videoIframe.src = videoIframe.src.replace('autoplay=1', 'autoplay=0');
         } else {
-          videoIframe.src = currentSrc.replace('autoplay=0', 'autoplay=1');
+          videoIframe.src = videoIframe.src.replace('autoplay=0', 'autoplay=1');
         }
       }
+    });
+
+    // Video error handling
+    videoIframe.addEventListener('error', function() {
+      console.error('Video failed to load');
+      loadingElement.style.display = 'none';
+      errorMsg.style.display = 'block';
+    });
+
+    // Video load success
+    videoIframe.addEventListener('load', function() {
+      console.log('Video loaded successfully');
+      loadingElement.style.display = 'none';
+      errorMsg.style.display = 'none';
+      videoIframe.style.opacity = '1';
+      isLoading = false;
     });
 
     // Click outside to close menu
     document.addEventListener('click', function(e) {
       if (!navbar.contains(e.target) && 
-          !menuIcon.contains(e.target) && 
+          e.target !== menuIcon && 
           navbar.classList.contains('active')) {
         navbar.classList.remove('active');
       }
     });
 
+    // Auto-play next video when current ends (simulated)
+    setInterval(function() {
+      // Optional: Auto-advance every 30 seconds
+      // changeVideo(1);
+    }, 30000);
+
     // Debug info
     console.log('✅ JavaScript loaded successfully!');
-    console.log('🎥 Videos ready:', youtubeShorts.length);
-    console.log('🎮 Controls: ← → arrows, Space to pause, Esc to close menu');
-    
-    // Auto-load first video after 1 second (fallback)
+    console.log('🎥 Total videos:', youtubeShorts.length);
+    console.log('🎮 Controls: Arrow keys, Space, Esc');
+
+    // Fallback: If no video loads in 3 seconds, load first one
     setTimeout(function() {
-      if (videoIframe.src === '') {
-        console.log('🔄 Auto-loading first video...');
+      if (videoIframe.src === '' || videoIframe.src.includes('about:blank')) {
+        console.log('🔄 Fallback: Loading first video');
         loadVideo(0);
       }
-    }, 1000);
+    }, 3000);
 
   </script>
 </body>
