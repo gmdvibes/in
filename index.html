@@ -161,6 +161,41 @@
       transform: translateY(-2px);
     }
     /* Hide counter - removed as requested */
+    /* Banner Ad Styling */
+.ad-banner {
+    position: fixed;
+    top: 60px; /* Position below logo */
+    left: 0;
+    width: 100%;
+    height: 90px;
+    background: transparent;
+    z-index: 998;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.ad-banner iframe {
+    width: 728px;
+    height: 90px;
+    border: none;
+    background: transparent;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .ad-banner {
+        top: 50px; /* Adjust for mobile */
+        height: 75px;
+    }
+    
+    .ad-banner iframe {
+        width: 100%;
+        max-width: 728px;
+        height: 75px;
+    }
+}
   </style>
   <script src="https://pl28402845.effectivegatecpm.com/01/83/b2/0183b2560b7446fc61adde6a9888b5ef.js"></script>
 </head>
@@ -199,6 +234,10 @@
 
   <!-- High-CPM Keywords List (for bots) -->
 </div>
+    <!-- 728x90 Banner Ad -->
+  <div class="ad-banner" id="ad-banner">
+    <!-- Ad will load here -->
+  </div>
   <div class="shorts-container">
     <!-- Video will load here -->
     <iframe id="short-video" 
@@ -259,7 +298,48 @@
       "https://youtube.com/shorts/MXekQdvy9LA?si=BEAOGFF3RbVCAVeU",
       "https://youtube.com/shorts/vqxhfTLtKgs?si=9K2fZgE-NSDm_mU0"
     ];
+    // ==============================================
+// 728x90 AD BANNER SETUP
+// ==============================================
+const adContainer = document.getElementById('ad-banner');
+let adRefreshInterval;
 
+function loadAdBanner() {
+    adContainer.innerHTML = `
+        <script>
+            atOptions = {
+                'key' : 'dadd0225964c8708963a371d70edcfc5',
+                'format' : 'iframe',
+                'height' : 90,
+                'width' : 728,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/dadd0225964c8708963a371d70edcfc5/invoke.js"></script>
+    `;
+    
+    // Clear existing interval
+    if (adRefreshInterval) {
+        clearInterval(adRefreshInterval);
+    }
+    
+    // Refresh ad every 30 seconds
+    adRefreshInterval = setInterval(() => {
+        console.log('🔄 Refreshing ad banner...');
+        loadAdBanner();
+    }, 30000); // 30 seconds
+}
+
+// Function to handle navbar toggling with ad adjustment
+function adjustAdForNavbar() {
+    if (navbar.classList.contains('active')) {
+        // When navbar is open, push ad down
+        adContainer.style.top = 'calc(60px + 100vh)';
+    } else {
+        // When navbar is closed, normal position
+        adContainer.style.top = '60px';
+    }
+  }
     let currentIndex = 0;
 
     // DOM Elements
@@ -320,7 +400,15 @@
     // Change video
     function changeVideo(direction) {
       loadVideo(currentIndex + direction);
+      adjustAdForNavbar(); // Adjust ad position when menu opens/closes
     }
+    // Close menu when clicking on links
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        navbar.classList.remove('active');
+        adjustAdForNavbar(); // Adjust ad position
+    });
+});
 
     // Close welcome popup
     function closePopup() {
@@ -332,6 +420,7 @@
     // Toggle menu
     function toggleMenu() {
       navbar.classList.toggle('active');
+        
     }
 
     // ==============================================
@@ -339,7 +428,8 @@
     // ==============================================
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🎬 GMD Vibes loaded with', youtubeShorts.length, 'shorts');
-      
+        // Load ad banner
+    loadAdBanner();
       // ALWAYS show popup on every visit (no localStorage)
       welcomePopup.style.display = 'flex';
       
